@@ -25,12 +25,21 @@ public class JWTUserDetailsService  implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if ("admin".equals(username)) {
+        /*if ("admin".equals(username)) {
             return new User("admin", "$2a$10$4jxSypRscWNFIYp5eU/dceOszto1FGvblTzqC5D.M3r8YIenfC1kq",
                     new ArrayList<>());
         } else {
             throw new UsernameNotFoundException("User not found with username: " + username);
+        }*/
+        System.out.println("- " + username);
+        UserDAO user = userDao.findByUsername(username);
+        System.out.println("-> " + user.getUsername());
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                new ArrayList<>());
+
     }
 
     public UserDAO save(UserDTO user) {
